@@ -1,0 +1,21 @@
+Please construct an model of an ideal 12-bit, 10MS/s SAR ADC in python. 
+
+This should consist of a sample and hold circuit, comparator, control logic, SAR register, and DAC. Please create each of these components in separate functions.
+
+Vin should be a cosine wave from 0 to 5V, 1 MHz.
+
+The DAC should have a Vref input = 5V.
+
+The SAR ADC should produce a binary output, which goes to the DAC.
+
+The two inputs of the comparator are the output of the S/H circuit and the output of the DAC.
+
+The output of the comparator is the input to the control logic.
+
+The output of the control logic is the SAR Register.
+
+The SAR register needs 12 clock cycles to complete the SAR algorithm for a 12-bit ADC. However, keep in mind this is different from the S/H clock, which is much slower. All 12 clock cycles of the SAR needs to complete before the S/H clock.
+
+Please plot the binary output and display the output of each stage for debugging.
+
+ 
