@@ -1,0 +1,34 @@
+`include "discipline.h"
+`include "constants.h"
+
+// Fully Differential Comparator with Reset
+module diff_comparator_rst(Vinp, Vinn, Voutp, Voutn, RST);
+  input Vinp, Vinn, RST;
+  output Voutp, Voutn;
+  electrical Vinp, Vinn, Voutp, Voutn, RST;
+
+  // Parameters
+  parameter real vout_high = 1.8;
+  parameter real vout_low = 0.0;
+  parameter real comp_slope = 1000;
+  parameter real rst_threshold = 0.9;  // Threshold for detecting logical 'high' on RST
+
+  analog begin
+    @(initial_step) begin
+      if (vout_high <= vout_low) begin
+        $display("Range specification error. vout_high = (%E) <= vout_low = (%E).\n", vout_high, vout_low);
+        $finish;
+      end
+    end
+
+    if (V(RST) > rst_threshold) begin
+      // Reset: force both outputs to vout_high
+      V(Voutp) <+ vout_high;
+      V(Voutn) <+ vout_high;
+    end else begin
+      // Normal comparator behavior
+      V(Voutp) <+ 0.5 * (vout_high - vout_low) * tanh(comp_slope * (V(Vinp) - V(Vinn))) + 0.5 * (vout_high + vout_low);
+      V(Voutn) <+ 0.5 * (vout_low - vout_high) * tanh(comp_slope * (V(Vinp) - V(Vinn))) + 0.5 * (vout_high + vout_low);
+    end
+  end
+endmodule

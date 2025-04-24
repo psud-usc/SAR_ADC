@@ -1,0 +1,44 @@
+`include "discipline.h"
+`include "constants.h"
+
+module d_ff_rst(vin_d, vclk, vrst, vout_q, vout_qbar);
+input vin_d, vclk, vrst;
+output vout_q, vout_qbar;
+electrical vin_d, vclk, vrst, vout_q, vout_qbar;
+
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans_clk = 2.5;
+parameter real vtrans = 2.5;
+parameter real vtrans_rst = 2.5;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+integer state;  // 0 or 1
+integer reset_flag, update_flag;
+
+analog begin
+    @(cross(V(vrst) - vtrans_rst, +1)) begin
+        reset_flag = 1;
+    end
+
+    @(cross(V(vclk) - vtrans_clk, +1)) begin
+        if (V(vrst) <= vtrans_rst) begin
+            state = (V(vin_d) > vtrans);
+            update_flag = 1;
+        end
+    end
+
+    // Outputs are driven unconditionally based on flags
+    if (reset_flag) begin
+        V(vout_q) <+ transition(vlogic_low, tdel, trise, tfall);
+        V(vout_qbar) <+ transition(vlogic_high, tdel, trise, tfall);
+        reset_flag = 0;
+    end else if (update_flag) begin
+        V(vout_q) <+ transition(vlogic_high*state + vlogic_low*!state, tdel, trise, tfall);
+        V(vout_qbar) <+ transition(vlogic_high*!state + vlogic_low*state, tdel, trise, tfall);
+        update_flag = 0;
+    end
+end
+endmodule

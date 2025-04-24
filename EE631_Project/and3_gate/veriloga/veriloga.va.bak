@@ -1,0 +1,9 @@
+// VerilogA for EE631_Project, and3_gate, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module and3_gate;
+
+
+endmodule

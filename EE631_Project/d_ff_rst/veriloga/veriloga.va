@@ -1,0 +1,46 @@
+`include "discipline.h"
+`include "constants.h"
+
+module d_ff_rst(vin_d, vclk, vrst, vout_q, vout_qbar);
+input vin_d, vclk, vrst;
+output vout_q, vout_qbar;
+electrical vin_d, vclk, vrst, vout_q, vout_qbar;
+
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans_clk = 2.5;
+parameter real vtrans = 2.5;
+parameter real vtrans_rst = 2.5;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+integer state;
+integer update_output;
+
+analog begin
+    @(initial_step) begin
+        state = 0;
+        update_output = 1;
+    end
+
+    @(cross(V(vrst) - vtrans_rst, +1)) begin
+        state = 0;              // Async reset to 0
+        update_output = 1;      // Flag to update output
+    end
+
+    @(cross(V(vclk) - vtrans_clk, +1)) begin
+        if (V(vrst) <= vtrans_rst) begin
+            state = (V(vin_d) > vtrans);
+            update_output = 1;
+        end
+    end
+
+    // Always drive output, conditionally update only if flagged
+    V(vout_q) <+ transition(vlogic_high * state + vlogic_low * (1 - state), 
+                            tdel * update_output, trise, tfall);
+    V(vout_qbar) <+ transition(vlogic_low * state + vlogic_high * (1 - state), 
+                               tdel * update_output, trise, tfall);
+    update_output = 0;
+end
+endmodule

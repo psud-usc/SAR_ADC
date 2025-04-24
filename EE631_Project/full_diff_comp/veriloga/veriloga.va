@@ -1,0 +1,29 @@
+`include "discipline.h"
+`include "constants.h"
+
+// Fully Differential Comparator
+module diff_comparator(Vinp, Vinn, Voutp, Voutn);
+  input Vinp, Vinn;
+  output Voutp, Voutn;
+  electrical Vinp, Vinn, Voutp, Voutn;
+
+  // Instance Parameters
+  parameter real vout_high = 1.8;       // Maximum output voltage
+  parameter real vout_low = 0.0;        // Minimum output voltage
+  parameter real comp_slope = 1000;     // Slope (steepness) of transition
+
+  analog begin
+
+	@ ( initial_step) begin
+	if (vout_high <= vout_low) begin
+		$display("Range specification error. vout_high = (%E) less than vout_low = (%E).\n", vout_high, vout_low );
+		$finish;
+	end
+	 end
+    // Differential comparison: Vinp - Vinn
+    // Voutp goes high when Vinp > Vinn, low when Vinp < Vinn
+    // Voutn goes low when Vinp > Vinn, high when Vinp < Vinn
+    V(Voutp) <+ 0.5 * (vout_high - vout_low) * tanh(comp_slope * (V(Vinp) - V(Vinn))) + 0.5 * (vout_high + vout_low);
+    V(Voutn) <+ 0.5 * (vout_low - vout_high) * tanh(comp_slope * (V(Vinp) - V(Vinn))) + 0.5 * (vout_high + vout_low);
+  end
+endmodule

@@ -1,0 +1,9 @@
+// VerilogA for EE631_Project, Ideal_Comp, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module Ideal_Comp;
+
+
+endmodule
