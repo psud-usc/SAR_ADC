@@ -6,11 +6,11 @@
 LockStakeVersion               1.1
 LoginName                      psud
 HostName                       viterbi-scf2.usc.edu
-ProcessIdentifier              40700
-ProcessCreationTime_UTC        1745995057
-ProcessCreationTime_Readable   Tue Apr 29 23:37:37 2025 PDT
+ProcessIdentifier              246542
+ProcessCreationTime_UTC        1746052598
+ProcessCreationTime_Readable   Wed Apr 30 15:36:38 2025 PDT
 AppIdentifier                  OA File System Design Manager
 OSType                         unix
 ReasonForPlacingEditLock       OpenAccess edit lock
-FilePathUsedToEditLock         /home/viterbi/04/psud/ee536/SAR_ADC/EE631_Project/12bit_SAR/schematic/sch.oa.cdslck
-TimeEditLocked                 Tue Apr 29 23:37:52 2025 PDT
+FilePathUsedToEditLock         /home/viterbi/04/psud/ee536/SAR_ADC/SAR_ADC/comparator/symbol/symbol.oa.cdslck
+TimeEditLocked                 Wed Apr 30 16:32:05 2025 PDT
